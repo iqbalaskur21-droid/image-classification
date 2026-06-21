@@ -1,17 +1,19 @@
-# app.py
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 import pathlib
+import os
 
-# 1. Konfigurasi dataset
-# Asumsi dataset disimpan dalam folder sesuai struktur notebook
-data_dir = pathlib.Path('/content/apple') 
+# Mengambil lokasi folder tempat file app.py ini disimpan
+base_dir = os.path.dirname(os.path.abspath(__file__))
+# Mengarahkan agar mencari folder 'apple' di lokasi yang sama dengan file ini
+data_dir = os.path.join(base_dir, 'apple')
+
 batch_size = 32
 img_height = 180
 img_width = 180
 
-# 2. Load dataset untuk training dan validation
+# Load dataset
 train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
@@ -31,12 +33,12 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
 class_names = train_ds.class_names
 print(f"Class names: {class_names}")
 
-# 3. Optimasi performa dataset
+# Optimasi dataset
 AUTOTUNE = tf.data.AUTOTUNE
 train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
-# 4. Membuat model CNN sederhana
+# Model CNN
 num_classes = len(class_names)
 
 model = keras.Sequential([
@@ -52,12 +54,12 @@ model = keras.Sequential([
   layers.Dense(num_classes)
 ])
 
-# 5. Kompilasi model
+# Kompilasi
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
-# 6. Training model
+# Training
 epochs = 10
 history = model.fit(
   train_ds,
