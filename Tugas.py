@@ -4,12 +4,18 @@ import os
 
 st.title("Klasifikasi Buah: Apple vs Mango")
 
-# Pastikan folder 'apple' berada di level yang sama dengan file Tugas.py
-data_dir = "apple" 
+# Fungsi mencari folder 'apple' secara otomatis di dalam repository
+def find_data_dir(folder_name="apple"):
+    for root, dirs, files in os.walk("."):
+        if folder_name in dirs:
+            return os.path.join(root, folder_name)
+    return None
 
-if os.path.exists(data_dir):
+data_dir = find_data_dir()
+
+if data_dir:
     try:
-        # Load dataset dengan konfigurasi standar
+        # Load dataset
         train_ds = tf.keras.utils.image_dataset_from_directory(
             data_dir,
             validation_split=0.2,
@@ -28,13 +34,10 @@ if os.path.exists(data_dir):
             batch_size=32
         )
         
-        class_names = train_ds.class_names
-        st.success(f"Dataset berhasil dimuat! Kelas yang ditemukan: {class_names}")
-        
-        # Tampilkan informasi singkat
-        st.write("Jumlah kelas:", len(class_names))
+        st.success(f"Dataset berhasil dimuat dari: {data_dir}")
+        st.write("Kelas yang ditemukan:", train_ds.class_names)
         
     except Exception as e:
-        st.error(f"Terjadi kesalahan saat memuat gambar: {e}")
+        st.error(f"Error saat load dataset: {e}")
 else:
-    st.error(f"Folder '{data_dir}' tidak ditemukan di GitHub. Pastikan folder tersebut ada di repositori Anda.")
+    st.error("Folder 'apple' tidak ditemukan. Pastikan folder tersebut ada di GitHub dan berisi sub-folder kelas (apple & mango).")
