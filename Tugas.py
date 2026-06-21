@@ -1,42 +1,16 @@
+from PIL import Image
 import streamlit as st
-import tensorflow as tf
-import os
 
-st.title("Klasifikasi Buah: Apple vs Mango")
+# --- KODE LAMA (JANGAN DIGUNAKAN) ---
+# img = Image.open("fruits/apple1.jpg") 
 
-# Nama folder utama yang ada di GitHub Anda
-DATA_DIR = "fruits" 
-
-# Cek apakah folder 'fruits' ada
-if os.path.exists(DATA_DIR):
-    try:
-        # Memuat dataset dari folder 'fruits'
-        # Struktur: fruits/apple/... dan fruits/mango/...
-        train_ds = tf.keras.utils.image_dataset_from_directory(
-            DATA_DIR,
-            validation_split=0.2,
-            subset="training",
-            seed=123,
-            image_size=(180, 180),
-            batch_size=32
-        )
-        
-        val_ds = tf.keras.utils.image_dataset_from_directory(
-            DATA_DIR,
-            validation_split=0.2,
-            subset="validation",
-            seed=123,
-            image_size=(180, 180),
-            batch_size=32
-        )
-        
-        class_names = train_ds.class_names
-        st.success(f"Dataset berhasil dimuat dari folder '{DATA_DIR}'!")
-        st.write("Kelas yang ditemukan:", class_names)
-        
-    except Exception as e:
-        st.error(f"Terjadi kesalahan saat memuat gambar: {e}")
-else:
-    st.error(f"Folder '{DATA_DIR}' tidak ditemukan.")
-    st.info("Pastikan Anda sudah mengupload FOLDER bernama 'fruits' ke GitHub.")
-    st.write("Isi folder saat ini:", os.listdir('.'))
+# --- KODE BARU (GUNAKAN INI) ---
+# Mengambil file langsung dari lokasi yang sama dengan script
+try:
+    apple_img = Image.open("apple1.jpg")
+    mango_img = Image.open("mango2.jpg")
+    
+    st.image(apple_img, caption="Apple")
+    st.image(mango_img, caption="Mango")
+except FileNotFoundError:
+    st.error("File gambar tidak ditemukan. Pastikan nama file sesuai: apple1.jpg dan mango2.jpg")
