@@ -1,6 +1,1 @@
-image-classification/  <-- Nama Repositori
-├── Tugas.py           <-- File utama Anda
-├── requirements.txt
-└── apple/             <-- Harus ada folder ini di GitHub
-    ├── apple/         <-- Subfolder kelas 1
-    ├── mango/         <-- Subfolder kelas 2
+
