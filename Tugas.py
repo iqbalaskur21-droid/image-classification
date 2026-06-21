@@ -2,20 +2,23 @@ import streamlit as st
 import tensorflow as tf
 import os
 
-st.title("Klasifikasi Buah: Apple vs Mango")
+st.title("Klasifikasi Buah")
 
-# Fungsi mencari folder 'apple' secara otomatis di dalam repository
-def find_data_dir(folder_name="apple"):
+# 1. Fungsi pencari folder yang sangat teliti
+def find_dataset_folder(folder_name="apple"):
     for root, dirs, files in os.walk("."):
         if folder_name in dirs:
             return os.path.join(root, folder_name)
     return None
 
-data_dir = find_data_dir()
+# 2. Mencari lokasi
+data_dir = find_dataset_folder()
 
 if data_dir:
+    st.success(f"Folder ditemukan di: {data_dir}")
+    
+    # 3. Load dataset
     try:
-        # Load dataset
         train_ds = tf.keras.utils.image_dataset_from_directory(
             data_dir,
             validation_split=0.2,
@@ -24,20 +27,12 @@ if data_dir:
             image_size=(180, 180),
             batch_size=32
         )
-        
-        val_ds = tf.keras.utils.image_dataset_from_directory(
-            data_dir,
-            validation_split=0.2,
-            subset="validation",
-            seed=123,
-            image_size=(180, 180),
-            batch_size=32
-        )
-        
-        st.success(f"Dataset berhasil dimuat dari: {data_dir}")
-        st.write("Kelas yang ditemukan:", train_ds.class_names)
-        
+        st.write("Dataset berhasil dimuat!")
+        st.write("Kelas ditemukan:", train_ds.class_names)
     except Exception as e:
-        st.error(f"Error saat load dataset: {e}")
+        st.error(f"Gagal memuat dataset: {e}")
 else:
-    st.error("Folder 'apple' tidak ditemukan. Pastikan folder tersebut ada di GitHub dan berisi sub-folder kelas (apple & mango).")
+    # 4. Jika tetap tidak ketemu, tampilkan semua isi folder untuk perbaikan terakhir
+    st.error("Folder 'apple' tidak ditemukan. Isi direktori saat ini:")
+    st.write(os.listdir('.'))
+    st.info("Jika folder 'apple' tidak ada di daftar di atas, berarti file/folder tersebut belum di-push ke GitHub atau berada di luar repositori yang terhubung ke Streamlit.")
