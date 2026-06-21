@@ -4,4 +4,3 @@ image-classification/  <-- Nama Repositori
 └── apple/             <-- Harus ada folder ini di GitHub
     ├── apple/         <-- Subfolder kelas 1
     ├── mango/         <-- Subfolder kelas 2
-    └── sample_data/   <-- Subfolder kelas 3
